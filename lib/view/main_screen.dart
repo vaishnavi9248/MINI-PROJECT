@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:online_voting_system/view/admin/admin_login_screen.dart';
 
 class MainScreen extends StatelessWidget {
@@ -31,11 +32,13 @@ class MainScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AdminLoginScreen()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => const AdminLoginScreen()),
+                    // );
+
+                    Get.to(() => const AdminLoginScreen());
                   },
                   child: const Text("Admin Login"),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:online_voting_system/utility/custom_print.dart';
+import 'package:get/get.dart';
+import 'package:online_voting_system/controller/admin/admin_login_controller.dart';
 import 'package:online_voting_system/utility/size.dart';
 
 class AdminLoginScreen extends StatelessWidget {
@@ -7,10 +8,7 @@ class AdminLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-    TextEditingController userName = TextEditingController();
-    TextEditingController password = TextEditingController();
+    AdminLoginController adminLoginController = Get.put(AdminLoginController());
 
     return Scaffold(
       body: Center(
@@ -28,12 +26,12 @@ class AdminLoginScreen extends StatelessWidget {
             SizedBox(
               width: customWidth(MediaQuery.of(context).size.width),
               child: Form(
-                key: formKey,
+                key: adminLoginController.formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
-                      controller: userName,
+                      controller: adminLoginController.userName,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: false,
                         signed: false,
@@ -54,7 +52,7 @@ class AdminLoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 14.0),
                     TextFormField(
-                      controller: password,
+                      controller: adminLoginController.password,
                       keyboardType: TextInputType.visiblePassword,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -76,16 +74,7 @@ class AdminLoginScreen extends StatelessWidget {
             const SizedBox(height: 26.0),
             ElevatedButton(
               onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  customPrint("Username ${userName.text}");
-                  customPrint("password ${password.text}");
-
-                  //
-
-                  //firebase code
-
-                  //
-                }
+                adminLoginController.adminLogin();
               },
               child: const Text("Submit"),
             ),
