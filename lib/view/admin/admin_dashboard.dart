@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({Key? key}) : super(key: key);
 
@@ -19,21 +17,12 @@ class AdminDashboard extends StatelessWidget {
                 fontSize: 45,
               ),
             ),
-
             const SizedBox(height: 50.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const AdminLoginScreen()),
-                    // );
-
-                    //Get.to(() =>);
-                  },
+                  onPressed: () {},
                   child: const Text("Nominations"),
                 ),
                 const SizedBox(width: 18.0),
@@ -41,18 +30,13 @@ class AdminDashboard extends StatelessWidget {
                   onPressed: () {},
                   child: const Text("Students add/edit"),
                 ),
-
                 const SizedBox(width: 18.0),
-
               ],
             ),
-            //search in google how to centre row widgets in flutter
-            //apply inside row
-            //go..
             const SizedBox(height: 50.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children:[
+              children: [
                 ElevatedButton(
                   onPressed: () {},
                   child: const Text("publish result"),
@@ -62,17 +46,7 @@ class AdminDashboard extends StatelessWidget {
                   onPressed: () {},
                   child: const Text("Start Election"),
                 ),
-                //multi child widget
-                //inside children
-
-
-                //single child widget
-                //inside child
-
-
-          //     voice ayakk
               ],
-
             )
           ],
         ),
