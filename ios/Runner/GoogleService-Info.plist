@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>34404962504-qs9pjnua6ocua3rotmfmpva1s291vm1o.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.34404962504-qs9pjnua6ocua3rotmfmpva1s291vm1o</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAs8gcnjREaswNHj-JTUpw71KrFXIJOiUQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>34404962504</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mes.voting.onlineVotingSystem</string>
+	<key>PROJECT_ID</key>
+	<string>online-voting-system-d490b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>online-voting-system-d490b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:34404962504:ios:c36c31b5471b35c1bd95fd</string>
+	<key>DATABASE_URL</key>
+	<string>https://online-voting-system-d490b-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
