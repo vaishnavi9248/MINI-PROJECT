@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/view/admin/admin_dashboard.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:online_voting_system/view/databse_screen.dart';
 import 'firebase_options.dart';
 
-void main() {
-  initialize();
+Future<void> main() async {
+  await initialize();
 
   runApp(const MyApp());
 }
