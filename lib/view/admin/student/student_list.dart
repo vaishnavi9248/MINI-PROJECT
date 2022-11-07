@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/const/database_names.dart';
 import 'package:online_voting_system/view/admin/student/student_detail.dart';
+import 'package:online_voting_system/widget/student_tile.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({Key? key}) : super(key: key);
@@ -16,13 +17,17 @@ class _StudentListState extends State<StudentList> {
 
   List list = [];
 
-  fetchStudentList() async {
+  Future<void> fetchStudentList() async {
     list = [];
     await db.collection(DataBaseName.students).get().then((event) {
       for (var doc in event.docs) {
-        list.add(doc.data());
+        Map<String, dynamic> data = {"id": doc.id};
+        data.addAll(doc.data());
+
+        list.add(data);
       }
     });
+
     setState(() {});
   }
 
@@ -40,7 +45,6 @@ class _StudentListState extends State<StudentList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -70,14 +74,43 @@ class _StudentListState extends State<StudentList> {
                     style: BorderStyle.solid,
                   ),
                 ),
-                child: ListView.builder(
-                  itemCount: list.length,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text("index $index"),
-                    );
-                  },
+                child: Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: StudentTile(
+                        id: "A.No",
+                        name: "Name",
+                        email: "Email",
+                        dob: "DOB",
+                        hideButton: true,
+                      ),
+                    ),
+                    const Divider(
+                      height: 1,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 4.0),
+                    ListView.separated(
+                      itemCount: list.length,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.all(8.0),
+                      itemBuilder: (BuildContext context, int index) {
+                        return StudentTile(
+                          id: list[index]['id'],
+                          name: list[index]['name'],
+                          email: list[index]['email'],
+                          dob: list[index]['dob'],
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 4.0),
+                          child: Divider(),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
