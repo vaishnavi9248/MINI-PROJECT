@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:online_voting_system/utility/size.dart';
 import 'package:online_voting_system/widget/custom_form_field.dart';
 
@@ -15,6 +16,7 @@ class _StudentDetailState extends State<StudentDetail> {
   TextEditingController admissionNo = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
+  DateTime? dob;
 
   @override
   Widget build(BuildContext context) {
@@ -23,82 +25,120 @@ class _StudentDetailState extends State<StudentDetail> {
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SizedBox(
-            width: customWidth(MediaQuery.of(context).size.width),
+            width: responsiveWidth(MediaQuery.of(context).size.width),
             child: Form(
               key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Student Form",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Student Form",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  CustomFormField(
-                    admissionNo: admissionNo,
-                    label: "Admission No",
-                    validator: (String? value) {
-                      if (value != null) {
-                        if (value.isEmpty) {
-                          return "Mandatory ";
+                    CustomFormField(
+                      controller: admissionNo,
+                      label: "Admission No",
+                      validator: (String? value) {
+                        if (value != null) {
+                          if (value.isEmpty) {
+                            return "Mandatory ";
+                          }
+                          // if (value.contains(RegExp(r'[0-9]'))) {
+                          //   return "Must be number";
+                          // }
                         }
-                        // if (value.contains(RegExp(r'[0-9]'))) {
-                        //   return "Must be number";
-                        // }
-                      }
 
-                      return null;
-                    },
-                  ),
-                  CustomFormField(
-                    admissionNo: name,
-                    label: "Student Name",
-                    validator: (String? value) {
-                      if (value != null) {
-                        if (value.isEmpty) {
-                          return "Mandatory ";
+                        return null;
+                      },
+                    ),
+                    CustomFormField(
+                      controller: name,
+                      label: "Student Name",
+                      validator: (String? value) {
+                        if (value != null) {
+                          if (value.isEmpty) {
+                            return "Mandatory ";
+                          }
+                          // if (value.contains(RegExp(r'[0-9]'))) {
+                          //   return "Must be number";
+                          // }
                         }
-                        // if (value.contains(RegExp(r'[0-9]'))) {
-                        //   return "Must be number";
-                        // }
-                      }
 
-                      return null;
-                    },
-                  ),
-                  CustomFormField(
-                    admissionNo: email,
-                    label: "Email",
-                    validator: (String? value) {
-                      if (value != null) {
-                        if (value.isEmpty) {
-                          return "Mandatory ";
+                        return null;
+                      },
+                    ),
+                    CustomFormField(
+                      controller: email,
+                      label: "Email",
+                      validator: (String? value) {
+                        if (value != null) {
+                          if (value.isEmpty) {
+                            return "Mandatory ";
+                          }
+                          // if (value.contains(RegExp(r'[0-9]'))) {
+                          //   return "Must be number";
+                          // }
                         }
-                        // if (value.contains(RegExp(r'[0-9]'))) {
-                        //   return "Must be number";
-                        // }
-                      }
 
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {}
-                    },
-                    child: const Text("Submit"),
-                  )
-                ]
-                    .map(
-                      (e) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: e),
+                        return null;
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text("DOB: "),
+                            ElevatedButton(
+                              child: Text(
+                                dob == null
+                                    ? "Select"
+                                    : DateFormat("dd-MM-yyyy").format(dob!),
+                              ),
+                              onPressed: () async {
+                                DateTime? date = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1950),
+                                  lastDate: DateTime(2010),
+                                );
+
+                                if (date != null) {
+                                  setState(() => dob = date);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text("SEX: "),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {}
+                      },
+                      child: const Text("Submit"),
                     )
-                    .toList(),
+                  ]
+                      .map(
+                        (e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: e),
+                      )
+                      .toList(),
+                ),
               ),
             ),
           ),

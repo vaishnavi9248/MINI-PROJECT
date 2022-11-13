@@ -24,7 +24,7 @@ class AdminLoginScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14.0),
             SizedBox(
-              width: customWidth(MediaQuery.of(context).size.width),
+              width: responsiveWidth(MediaQuery.of(context).size.width),
               child: Form(
                 key: adminLoginController.formKey,
                 child: Column(

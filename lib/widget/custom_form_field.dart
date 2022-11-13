@@ -3,19 +3,21 @@ import 'package:flutter/material.dart';
 class CustomFormField extends StatelessWidget {
   const CustomFormField({
     Key? key,
-    required this.admissionNo,
+    required this.controller,
     required this.label,
     this.validator,
+    this.onSubmit,
   }) : super(key: key);
 
-  final TextEditingController admissionNo;
+  final TextEditingController controller;
   final String label;
   final String? Function(String?)? validator;
+  final String? Function(String?)? onSubmit;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: admissionNo,
+      controller: controller,
       decoration: InputDecoration(
         hintText: label,
         label: Text(label),
@@ -23,6 +25,11 @@ class CustomFormField extends StatelessWidget {
         alignLabelWithHint: true,
       ),
       validator: validator,
+      onFieldSubmitted: (value) {
+        if (onSubmit != null) {
+          onSubmit!(value);
+        }
+      },
     );
   }
 }

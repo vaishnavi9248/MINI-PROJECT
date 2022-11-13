@@ -60,7 +60,7 @@ class StudentTile extends StatelessWidget {
                         elevation:
                             hideButton ? MaterialStateProperty.all(0) : null,
                       ),
-                      child: hideButton ? null : const Text("Accept"),
+                      child: hideButton ? null : const Text("Edit"),
                     ),
                     ElevatedButton(
                       onPressed: () {},
@@ -74,7 +74,7 @@ class StudentTile extends StatelessWidget {
                         elevation:
                             hideButton ? MaterialStateProperty.all(0) : null,
                       ),
-                      child: hideButton ? null : const Text("Reject"),
+                      child: hideButton ? null : const Text("Delete"),
                     ),
                   ],
                 ),

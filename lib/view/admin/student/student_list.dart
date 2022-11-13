@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:online_voting_system/const/database_names.dart';
+import 'package:online_voting_system/const/collection_names.dart';
 import 'package:online_voting_system/view/admin/student/student_detail.dart';
+import 'package:online_voting_system/widget/common_heading.dart';
 import 'package:online_voting_system/widget/student_tile.dart';
 
 class StudentList extends StatefulWidget {
@@ -19,7 +20,7 @@ class _StudentListState extends State<StudentList> {
 
   Future<void> fetchStudentList() async {
     list = [];
-    await db.collection(DataBaseName.students).get().then((event) {
+    await db.collection(CollectionName.students).get().then((event) {
       for (var doc in event.docs) {
         Map<String, dynamic> data = {"id": doc.id};
         data.addAll(doc.data());
@@ -48,14 +49,7 @@ class _StudentListState extends State<StudentList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Student List",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const CommonHeading(title: "Student List"),
                 ElevatedButton(
                   onPressed: () {
                     Get.to(() => const StudentDetail());
