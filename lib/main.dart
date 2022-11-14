@@ -2,8 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/firebase_options.dart';
-
-import 'view/admin/common/semester/semester_screen.dart';
+import 'package:online_voting_system/view/admin/student/student_detail.dart';
 
 Future<void> main() async {
   await initialize();
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SemesterScreen(),
+      home: StudentDetail(),
     );
   }
 }

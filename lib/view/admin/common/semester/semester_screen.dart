@@ -1,21 +1,39 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:online_voting_system/const/collection_names.dart';
+import 'package:online_voting_system/data/model/course_model.dart';
 import 'package:online_voting_system/data/model/semester_model.dart';
 import 'package:online_voting_system/services/firebase_service.dart';
 import 'package:online_voting_system/utility/size.dart';
+import 'package:online_voting_system/utility/snackbar.dart';
 import 'package:online_voting_system/view/admin/common/semester/semester_list.dart';
 import 'package:online_voting_system/widget/common_heading.dart';
 import 'package:online_voting_system/widget/common_scaffold.dart';
 import 'package:online_voting_system/widget/custom_form_field.dart';
 import 'package:online_voting_system/widget/semester_tile.dart';
 
-class SemesterScreen extends StatelessWidget {
+class SemesterScreen extends StatefulWidget {
   const SemesterScreen({Key? key}) : super(key: key);
 
-  static TextEditingController controller = TextEditingController();
+  @override
+  State<SemesterScreen> createState() => _SemesterScreenState();
+}
 
-  static final FirebaseService _firebaseService = FirebaseService();
+class _SemesterScreenState extends State<SemesterScreen> {
+  TextEditingController controller = TextEditingController();
+
+  final FirebaseService _firebaseService = FirebaseService();
+
+  CourseModel? selectedValue;
+  bool courseLoading = false;
+  List<CourseModel> courses = [];
+
+  @override
+  void initState() {
+    getCourseList();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +49,39 @@ class SemesterScreen extends StatelessWidget {
             width: width,
             child: Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      style: BorderStyle.solid,
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        style: BorderStyle.solid,
+                      ),
                     ),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      hint: const Text("---Select Department---"),
-                      items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<CourseModel>(
+                        isExpanded: true,
+                        hint: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            courseLoading ? " Loading..." : "Course",
+                          ),
+                        ),
+                        value: selectedValue,
+                        items: courses.map((CourseModel value) {
+                          return DropdownMenuItem<CourseModel>(
+                            value: value,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(value.name),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (CourseModel? value) {
+                          setState(() {
+                            selectedValue = value!;
+                          });
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -56,6 +90,7 @@ class SemesterScreen extends StatelessWidget {
                   child: CustomFormField(
                       controller: controller,
                       label: 'Semester',
+                      isDense: false,
                       onSubmit: (String? value) {
                         if (value != null) addSemester();
                         return null;
@@ -64,8 +99,13 @@ class SemesterScreen extends StatelessWidget {
                 SizedBox(width: width * 0.05),
                 ElevatedButton(
                   onPressed: () {
-                    if (controller.text.isNotEmpty) {
+                    if (controller.text.isNotEmpty && selectedValue != null) {
                       addSemester();
+                    } else {
+                      showSnackBar(
+                        context: context,
+                        text: "Please select course and add semester",
+                      );
                     }
                   },
                   child: const Text("Add"),
@@ -88,7 +128,7 @@ class SemesterScreen extends StatelessWidget {
                   const SizedBox(height: 8.0),
                   const SemesterTile(
                     no: "No.",
-                    department: "Department",
+                    course: "Course",
                     semester: "Semester",
                   ),
                   const SizedBox(height: 8.0),
@@ -99,9 +139,11 @@ class SemesterScreen extends StatelessWidget {
                   const SizedBox(height: 8.0),
                   Expanded(
                     child: StreamBuilder(
-                      stream: _firebaseService.getData(
-                          collectionName: CollectionName.semesters,
-                          orderBy: "departmentName"),
+                      stream: _firebaseService.getCollectionStreamOrderBy(
+                        collectionName: CollectionName.semesters,
+                        orderBy: "departmentName",
+                        orderByNew: "name",
+                      ),
                       builder: (BuildContext context,
                           AsyncSnapshot<dynamic> snapshot) {
                         if (snapshot.hasError) {
@@ -138,16 +180,33 @@ class SemesterScreen extends StatelessWidget {
   }
 
   Future<void> addSemester() async {
-    final text = controller.text;
+    final text = controller.text.toUpperCase();
 
     controller.text = "";
     await _firebaseService.addDoc(
       collectionName: CollectionName.semesters,
       data: SemesterModel(
-              departmentId: "department id",
-              departmentName: "department name",
-              name: text)
-          .toJson(),
+        departmentId: selectedValue!.id,
+        departmentName: selectedValue!.name,
+        name: text,
+      ).toJson(),
     );
+  }
+
+  Future<void> getCourseList() async {
+    setState(() => courseLoading = true);
+    List<DocumentSnapshot> result = await _firebaseService.getData(
+      collectionName: CollectionName.courses,
+      orderBy: "name",
+    );
+
+    for (var element in result) {
+      CourseModel courseModel =
+          CourseModel.fromJson(element.data() as Map<String, dynamic>);
+      courses.add(courseModel);
+    }
+    courseLoading = false;
+
+    setState(() {});
   }
 }

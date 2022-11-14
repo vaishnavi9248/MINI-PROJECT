@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SemesterTile extends StatelessWidget {
-  const SemesterTile({
+class CourseTile extends StatelessWidget {
+  const CourseTile({
     Key? key,
     required this.no,
     required this.course,
     this.onDelete,
-    required this.semester,
   }) : super(key: key);
 
-  final String no, course, semester;
+  final String no, course;
   final Function? onDelete;
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return IntrinsicHeight(
       child: Row(
         children: [
@@ -26,14 +24,6 @@ class SemesterTile extends StatelessWidget {
               textAlign: onDelete != null ? TextAlign.start : TextAlign.center,
             ),
           ),
-          const SizedBox(width: 8.0),
-          const VerticalDivider(
-            width: 1,
-            color: Colors.grey,
-            indent: 1,
-          ),
-          const SizedBox(width: 8.0),
-          Expanded(flex: width < 680 ? 5 : 1, child: Text(semester)),
           const SizedBox(width: 8.0),
           const VerticalDivider(
             width: 1,

@@ -5,11 +5,33 @@ import 'package:online_voting_system/utility/custom_print.dart';
 class FirebaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Stream getData({
+  Stream getCollectionStream({
     required String collectionName,
     required String orderBy,
   }) =>
-      _db.collection(collectionName).orderBy("name").snapshots();
+      _db.collection(collectionName).orderBy(orderBy).snapshots();
+
+  Stream getCollectionStreamOrderBy({
+    required String collectionName,
+    required String orderBy,
+    required String orderByNew,
+  }) =>
+      _db
+          .collection(collectionName)
+          .orderBy(orderBy)
+          .orderBy(orderByNew)
+          .snapshots();
+
+  Future<List<DocumentSnapshot>> getData({
+    required String collectionName,
+    required String orderBy,
+  }) async {
+    return await _db
+        .collection(collectionName)
+        .orderBy(orderBy)
+        .get()
+        .then((value) => value.docs);
+  }
 
   Future<bool> addDoc({
     required String collectionName,
