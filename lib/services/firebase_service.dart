@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:online_voting_system/const/collection_names.dart';
 import 'package:online_voting_system/utility/custom_print.dart';
 
 class FirebaseService {
@@ -10,6 +11,17 @@ class FirebaseService {
     required String orderBy,
   }) =>
       _db.collection(collectionName).orderBy(orderBy).snapshots();
+
+  Stream getStudentDocs({
+    required String courseId,
+    required String semesterId,
+  }) =>
+      _db
+          .collection(CollectionName.students)
+          .where("courseId", isEqualTo: courseId)
+          .where("semesterId", isEqualTo: semesterId)
+          .orderBy("id")
+          .snapshots();
 
   Stream getCollectionStreamOrderBy({
     required String collectionName,
@@ -33,6 +45,20 @@ class FirebaseService {
         .then((value) => value.docs);
   }
 
+  Future<List<DocumentSnapshot>> getFilterData({
+    required String collectionName,
+    required String orderBy,
+    required String field,
+    required String id,
+  }) async {
+    return await _db
+        .collection(collectionName)
+        .where(field, isEqualTo: id)
+        .orderBy(orderBy)
+        .get()
+        .then((value) => value.docs);
+  }
+
   Future<bool> addDoc({
     required String collectionName,
     required Map<String, dynamic> data,
@@ -48,7 +74,25 @@ class FirebaseService {
 
       return true;
     } catch (e) {
-      customPrint("getData error $e");
+      customPrint("addDoc error $e");
+
+      return false;
+    }
+  }
+
+  Future<bool> addDocById({
+    required String collectionName,
+    required String id,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await _db.collection(collectionName).doc(id).set(data);
+
+      debugPrint("document on $collectionName as data $data added");
+
+      return true;
+    } catch (e) {
+      customPrint("addDocById error $e");
 
       return false;
     }
@@ -67,6 +111,24 @@ class FirebaseService {
     } catch (e) {
       customPrint("deleteDOc error $e");
       return false;
+    }
+  }
+
+  Future<Object?> getDocById({
+    required String id,
+    required String collectionName,
+  }) async {
+    try {
+      DocumentSnapshot data =
+          await _db.collection(collectionName).doc(id).get();
+
+      debugPrint(
+          "document on $collectionName, data: ${data.data() as Map<String, dynamic>}");
+
+      return data.data();
+    } catch (e) {
+      customPrint("getDocById error $e");
+      return null;
     }
   }
 }

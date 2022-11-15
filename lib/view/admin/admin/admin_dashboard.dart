@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/view/admin/common/course/course_screen.dart';
 import 'package:online_voting_system/view/admin/common/semester/semester_screen.dart';
-import 'package:online_voting_system/view/admin/student/student_list.dart';
+import 'package:online_voting_system/view/admin/student/student_screen.dart';
 import 'package:online_voting_system/widget/common_heading.dart';
 import 'package:online_voting_system/widget/common_scaffold.dart';
 
@@ -43,7 +43,7 @@ class AdminDashboard extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Get.to(() => const StudentList());
+                      Get.to(() => const StudentScreen());
                     },
                     child: const Text("Students"),
                   ),

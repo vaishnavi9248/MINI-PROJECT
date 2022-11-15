@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/view/admin/admin/admin_login_screen.dart';
+import 'package:online_voting_system/view/student/student_login.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -45,7 +46,9 @@ class Home extends StatelessWidget {
                 ),
                 const SizedBox(width: 18.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => const StudentLogin());
+                  },
                   child: const Text("Student Login"),
                 ),
                 const SizedBox(width: 18.0),

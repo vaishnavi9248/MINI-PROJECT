@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/firebase_options.dart';
-import 'package:online_voting_system/view/admin/student/student_detail.dart';
+import 'package:online_voting_system/view/home.dart';
+import 'package:online_voting_system/view/student/student_dashboard.dart';
+import 'package:online_voting_system/view/student/student_login.dart';
 
 Future<void> main() async {
   await initialize();
@@ -21,9 +23,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const GetMaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: StudentDetail(),
+      initialRoute: '/',
+      getPages: [
+        GetPage(name: '/', page: () => const Home()),
+        GetPage(name: '/StudentLogin', page: () => const StudentLogin()),
+        GetPage(
+          name: '/StudentDashboard',
+          page: () => const StudentDashboard(),
+        ),
+      ],
     );
   }
 }
