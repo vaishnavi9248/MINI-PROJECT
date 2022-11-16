@@ -18,21 +18,24 @@ class CustomFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: label,
-        label: Text(label),
-        border: const OutlineInputBorder(),
-        alignLabelWithHint: true,
-        isDense: isDense,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: label,
+          label: Text(label),
+          border: const OutlineInputBorder(),
+          alignLabelWithHint: true,
+          isDense: isDense,
+        ),
+        validator: validator,
+        onFieldSubmitted: (value) {
+          if (onSubmit != null) {
+            onSubmit!(value);
+          }
+        },
       ),
-      validator: validator,
-      onFieldSubmitted: (value) {
-        if (onSubmit != null) {
-          onSubmit!(value);
-        }
-      },
     );
   }
 }

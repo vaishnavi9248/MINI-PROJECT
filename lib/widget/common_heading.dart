@@ -5,10 +5,12 @@ class CommonHeading extends StatelessWidget {
     Key? key,
     required this.title,
     this.fontSize = 20.0,
+    this.haveUnderLine = true,
   }) : super(key: key);
 
   final String title;
   final double fontSize;
+  final bool haveUnderLine;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,8 @@ class CommonHeading extends StatelessWidget {
           fontSize: fontSize,
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          decoration: TextDecoration.underline,
+          decoration:
+              haveUnderLine ? TextDecoration.underline : TextDecoration.none,
         ),
       ),
     );

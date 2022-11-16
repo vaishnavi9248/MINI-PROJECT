@@ -23,6 +23,29 @@ class FirebaseService {
           .orderBy("id")
           .snapshots();
 
+  Stream getNominationsDocs({
+    required String courseId,
+    required String semesterId,
+  }) =>
+      _db
+          .collection(CollectionName.nomination)
+          .where("candidateCourse", isEqualTo: courseId)
+          .where("candidateSemester", isEqualTo: semesterId)
+          .orderBy("candidateId")
+          .snapshots();
+
+  Stream getResultList({
+    required String courseId,
+    required String semesterId,
+  }) =>
+      _db
+          .collection(CollectionName.nomination)
+          .where("candidateCourse", isEqualTo: courseId)
+          .where("candidateSemester", isEqualTo: semesterId)
+          .where("status", isEqualTo: "ACCEPTED")
+          .orderBy("count")
+          .snapshots();
+
   Stream getCollectionStreamOrderBy({
     required String collectionName,
     required String orderBy,
@@ -98,6 +121,24 @@ class FirebaseService {
     }
   }
 
+  Future<bool> updateDocById({
+    required String collectionName,
+    required String id,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await _db.collection(collectionName).doc(id).update(data);
+
+      debugPrint("document on $collectionName as updated $data added");
+
+      return true;
+    } catch (e) {
+      customPrint("addDocById error $e");
+
+      return false;
+    }
+  }
+
   Future<bool> deleteDoc({
     required String collectionName,
     required String id,
@@ -130,5 +171,46 @@ class FirebaseService {
       customPrint("getDocById error $e");
       return null;
     }
+  }
+
+  Future<Object?> getMainInfo() async {
+    try {
+      DocumentSnapshot data = await _db
+          .collection(CollectionName.commonCollection)
+          .doc("mainInfo")
+          .get();
+
+      debugPrint(
+          "document on commonCollection, data: ${data.data() as Map<String, dynamic>}");
+
+      return data.data();
+    } catch (e) {
+      customPrint("getMainInfo error $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getAdminInfo() async {
+    try {
+      DocumentSnapshot data = await _db
+          .collection(CollectionName.commonCollection)
+          .doc("adminCredentials")
+          .get();
+
+      debugPrint(
+          "document on commonCollection, data: ${data.data() as Map<String, dynamic>}");
+
+      return data.data() as Map<String, dynamic>;
+    } catch (e) {
+      customPrint("getMainInfo error $e");
+      return null;
+    }
+  }
+
+  Future<void> incrementCount(String id) async {
+    await _db
+        .collection(CollectionName.nomination)
+        .doc(id)
+        .update({"count": FieldValue.increment(1)});
   }
 }

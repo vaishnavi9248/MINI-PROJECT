@@ -72,11 +72,15 @@ class StudentLogin extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 26.0),
-            ElevatedButton(
-              onPressed: () {
-                studentController.login(context);
-              },
-              child: const Text("Submit"),
+            Obx(
+              () => ElevatedButton(
+                onPressed: studentController.loading.value
+                    ? null
+                    : () => studentController.login(context),
+                child: Text(
+                  studentController.loading.value ? "Please wait..." : "Submit",
+                ),
+              ),
             ),
           ],
         ),

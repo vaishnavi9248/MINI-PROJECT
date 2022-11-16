@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:online_voting_system/controller/common_controller.dart';
+import 'package:online_voting_system/controller/nomination_controller.dart';
 import 'package:online_voting_system/controller/student/student_controller.dart';
 import 'package:online_voting_system/widget/common_heading.dart';
 import 'package:online_voting_system/widget/common_scaffold.dart';
@@ -8,12 +11,17 @@ class StudentDashboard extends StatelessWidget {
   const StudentDashboard({Key? key}) : super(key: key);
 
   static StudentController studentController = Get.put(StudentController());
+  static NominationController nominationController =
+      Get.put(NominationController());
+  static CommonController commonController = Get.put(CommonController());
 
   @override
   Widget build(BuildContext context) {
     return CommonScaffold(
       child: Obx(
-        () => studentController.loading.value
+        () => studentController.loading.value ||
+                nominationController.loading.value ||
+                commonController.loading.value
             ? const Center(child: Text("Loading..."))
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +43,8 @@ class StudentDashboard extends StatelessWidget {
                         "Email: ${studentController.studentModel.value.email}",
                   ),
                   StudentDataTile(
-                    value: "DOB: ${studentController.studentModel.value.dob}",
+                    value:
+                        "DOB: ${DateFormat("dd-MM-yyy").format(studentController.studentModel.value.dob ?? DateTime.now())}",
                   ),
                   StudentDataTile(
                     value:
@@ -45,15 +54,45 @@ class StudentDashboard extends StatelessWidget {
                     value: "Sex: ${studentController.studentModel.value.sex}",
                   ),
                   StudentDataTile(
-                    value:
-                        "Nomination Status: ${studentController.studentModel.value.nominationId.isEmpty ? "Not applied" : ""}",
-                  ),
-                  const StudentDataTile(value: "Vote Status: Not voted"),
+                      value:
+                          "Nomination Status: ${nominationController.nominationData.value.status}"),
+                  StudentDataTile(
+                      value:
+                          "Vote Status: ${studentController.studentModel.value.isVoted ? "Voted" : "Not voted"}"),
                   const SizedBox(height: 16.0),
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text("Nomination")),
+                  if (commonController.mainInfoModel.value.nominationStart &&
+                      nominationController.nominationData.value.status.isEmpty)
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.toNamed(
+                            "/NominationForm",
+                            parameters: {
+                              "id": studentController
+                                  .studentModel.value.admissionNo
+                            },
+                          );
+                        },
+                        child: const Text("Nomination")),
                   const SizedBox(height: 8.0),
-                  ElevatedButton(onPressed: () {}, child: const Text("Vote")),
+                  if (commonController.mainInfoModel.value.electionStart &&
+                      !studentController.studentModel.value.isVoted)
+                    ElevatedButton(
+                        onPressed: () {
+                          // Get.to(() => const VotingScreen());
+
+                          Get.toNamed(
+                            "/VotingScreen",
+                            parameters: {
+                              "studentId": studentController
+                                  .studentModel.value.admissionNo,
+                              "courseId": studentController
+                                  .studentModel.value.courseName,
+                              "semesterId": studentController
+                                  .studentModel.value.semesterName,
+                            },
+                          );
+                        },
+                        child: const Text("Vote")),
                 ],
               ),
       ),

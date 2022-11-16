@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:online_voting_system/controller/common_controller.dart';
 import 'package:online_voting_system/view/admin/admin/admin_login_screen.dart';
+import 'package:online_voting_system/view/result/result_screen.dart';
 import 'package:online_voting_system/view/student/student_login.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
+  static CommonController commonController = CommonController();
+
   @override
   Widget build(BuildContext context) {
+    commonController.getMainInfo();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -52,10 +57,16 @@ class Home extends StatelessWidget {
                   child: const Text("Student Login"),
                 ),
                 const SizedBox(width: 18.0),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text("Nomination"),
-                )
+                Obx(
+                  () => commonController.mainInfoModel.value.resultPublished
+                      ? ElevatedButton(
+                          onPressed: () {
+                            Get.to(() => const ResultScreen());
+                          },
+                          child: const Text("Result"),
+                        )
+                      : const SizedBox(),
+                ),
               ],
             ),
           ],

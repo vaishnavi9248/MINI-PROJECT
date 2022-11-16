@@ -17,7 +17,6 @@ class StudentModel {
     this.courseName = "",
     this.semesterId = "",
     this.semesterName = "",
-    this.nominationId = "",
     this.isVoted = false,
   });
 
@@ -26,7 +25,6 @@ class StudentModel {
   String name;
   String email;
   String sex;
-  String nominationId;
   String courseId;
   String courseName;
   String semesterId;
@@ -40,7 +38,6 @@ class StudentModel {
         ktuId: json["ktuId"] ?? "",
         email: json["email"] ?? "",
         sex: json["sex"] ?? "",
-        nominationId: json["nominationId"] ?? "",
         courseId: json["courseId"] ?? "",
         courseName: json["courseName"] ?? "",
         semesterId: json["semesterId"] ?? "",
@@ -55,7 +52,6 @@ class StudentModel {
         "ktuId": ktuId,
         "email": email,
         "sex": sex,
-        "nominationId": nominationId,
         "dob": dob,
         "courseId": courseId,
         "courseName": courseName,

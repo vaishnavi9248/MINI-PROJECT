@@ -72,11 +72,15 @@ class AdminLoginScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 26.0),
-            ElevatedButton(
-              onPressed: () {
-                adminLoginController.adminLogin();
-              },
-              child: const Text("Submit"),
+            Obx(
+              () => ElevatedButton(
+                onPressed: adminLoginController.loading.value
+                    ? null
+                    : () => adminLoginController.adminLogin(),
+                child: Text(
+                  adminLoginController.loading.value ? "Loading..." : "Submit",
+                ),
+              ),
             ),
           ],
         ),
