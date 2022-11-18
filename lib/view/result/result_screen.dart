@@ -104,72 +104,95 @@ class _ResultScreenState extends State<ResultScreen> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1,
-                  style: BorderStyle.solid,
-                ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: selectedCourse == null || selectedSemester == null
-                        ? const Center(
-                            child: Text("Please select course and semester"))
-                        : StreamBuilder(
-                            stream: _firebaseService.getResultList(
-                              semesterId: selectedSemester!.name,
-                              courseId: selectedCourse!.name,
-                            ),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<dynamic> snapshot) {
-                              if (snapshot.hasError) {
+            child: Column(
+              children: [
+                Expanded(
+                  child: selectedCourse == null || selectedSemester == null
+                      ? const Center(
+                          child: Text("Please select course and semester"))
+                      : StreamBuilder(
+                          stream: _firebaseService.getResultList(
+                            semesterId: selectedSemester!.name,
+                            courseId: selectedCourse!.name,
+                          ),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<dynamic> snapshot) {
+                            if (snapshot.hasError) {
+                              return const Center(
+                                  child: Text('Something went wrong'));
+                            }
+
+                            if (snapshot.hasData) {
+                              List<DocumentSnapshot> data = snapshot.data!.docs;
+
+                              if (data.isEmpty) {
                                 return const Center(
-                                    child: Text('Something went wrong'));
+                                    child: Text("No Candidates"));
                               }
 
-                              if (snapshot.hasData) {
-                                List<DocumentSnapshot> data =
-                                    snapshot.data!.docs;
+                              if (data.isNotEmpty) {
+                                List<NominationModel> listData = [];
 
-                                if (data.isEmpty) {
-                                  return const Center(
-                                      child: Text("No Candidates"));
+                                for (var element in data) {
+                                  listData.add(NominationModel.fromJson(
+                                      element.data() as Map<String, dynamic>));
                                 }
 
-                                if (data.isNotEmpty) {
-                                  return ListView.builder(
-                                    itemCount: data.length,
-                                    shrinkWrap: true,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      NominationModel nominationData =
-                                          NominationModel.fromJson(data[index]
-                                              .data() as Map<String, dynamic>);
+                                listData
+                                    .sort((a, b) => b.count.compareTo(a.count));
 
-                                      return VoteCard(
+                                bool haveTie = tieVote(listData);
+
+                                return ListView.builder(
+                                  itemCount: listData.length,
+                                  shrinkWrap: true,
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    NominationModel nominationData =
+                                        listData[index];
+
+                                    return Center(
+                                      child: VoteCard(
                                         name: nominationData.candidateName,
                                         adNo: nominationData.candidateId,
                                         count: nominationData.count.toString(),
-                                      );
-                                    },
-                                  );
-                                }
+                                        win: listData[0].count ==
+                                            nominationData.count,
+                                        tie: listData[0].count ==
+                                                nominationData.count
+                                            ? haveTie
+                                            : false,
+                                      ),
+                                    );
+                                  },
+                                );
                               }
+                            }
 
-                              return const Center(child: Text("Loading"));
-                            },
-                          ),
-                  ),
-                ],
-              ),
+                            return const Center(child: Text("Loading"));
+                          },
+                        ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  bool tieVote(listData) {
+    if (listData.isNotEmpty) {
+      int topCount = listData[0].count;
+
+      List<NominationModel> newData =
+          listData.where((element) => element.count == topCount).toList();
+
+      return newData.length == 1 ? false : true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> getCourses() async {
@@ -205,11 +228,14 @@ class VoteCard extends StatelessWidget {
     required this.name,
     required this.adNo,
     required this.count,
+    this.win = false,
+    this.tie = false,
   }) : super(key: key);
 
   final String name;
   final String adNo;
   final String count;
+  final bool win, tie;
 
   @override
   Widget build(BuildContext context) {
@@ -218,6 +244,7 @@ class VoteCard extends StatelessWidget {
         width: 300,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -235,7 +262,7 @@ class VoteCard extends StatelessWidget {
               width: 70,
               alignment: Alignment.center,
               child: Text(
-                count,
+                "${tie ? "Tie " : win ? "Winner " : ""}$count",
                 style: const TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.bold,

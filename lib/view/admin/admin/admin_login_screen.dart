@@ -2,27 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:online_voting_system/controller/admin/admin_login_controller.dart';
 import 'package:online_voting_system/utility/size.dart';
+import 'package:online_voting_system/widget/common_heading.dart';
+import 'package:online_voting_system/widget/common_scaffold.dart';
 
-class AdminLoginScreen extends StatelessWidget {
+class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    AdminLoginController adminLoginController = Get.put(AdminLoginController());
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
+}
 
-    return Scaffold(
-      body: Center(
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
+  AdminLoginController adminLoginController = Get.put(AdminLoginController());
+
+  bool hidePassword = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return CommonScaffold(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Admin Login",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 36,
-              ),
-            ),
-            const SizedBox(height: 14.0),
+            const CommonHeading(title: "Admin Login", fontSize: 36),
+            const SizedBox(height: 32.0),
             SizedBox(
               width: responsiveWidth(MediaQuery.of(context).size.width),
               child: Form(
@@ -50,13 +53,25 @@ class AdminLoginScreen extends StatelessWidget {
                         return null;
                       },
                     ),
-                    const SizedBox(height: 14.0),
+                    const SizedBox(height: 16.0),
                     TextFormField(
                       controller: adminLoginController.password,
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      keyboardType: TextInputType.text,
+                      obscureText: hidePassword,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
                         hintText: 'password',
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                hidePassword = !hidePassword;
+                              });
+                            },
+                            child: Icon(
+                                hidePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey)),
                       ),
                       validator: (String? value) {
                         if (value != null) {
@@ -71,7 +86,7 @@ class AdminLoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 26.0),
+            const SizedBox(height: 32.0),
             Obx(
               () => ElevatedButton(
                 onPressed: adminLoginController.loading.value

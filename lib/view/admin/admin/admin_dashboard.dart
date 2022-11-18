@@ -22,10 +22,7 @@ class AdminDashboard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(flex: 1),
-            const CommonHeading(
-              title: "Admin Dashboard",
-              fontSize: 36,
-            ),
+            const CommonHeading(title: "Admin Dashboard", fontSize: 36),
             const SizedBox(height: 38.0),
             Padding(
               padding: const EdgeInsets.all(32.0),
@@ -59,6 +56,18 @@ class AdminDashboard extends StatelessWidget {
                       },
                       child: const Text("Nominations"),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Center(
+                child: Wrap(
+                  alignment: WrapAlignment.spaceAround,
+                  spacing: 18.0,
+                  runSpacing: 12.0,
+                  children: [
                     ElevatedButton(
                       onPressed: () {
                         commonController.updateField({
@@ -93,8 +102,10 @@ class AdminDashboard extends StatelessWidget {
                 ),
               ),
             ),
-            if (commonController.loading.value)
+            if (commonController.loading.value) ...[
+              const SizedBox(height: 18.0),
               const Text("Updating data...Please wait...."),
+            ],
             const Spacer(flex: 2),
           ],
         ),

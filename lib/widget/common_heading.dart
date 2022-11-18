@@ -5,7 +5,7 @@ class CommonHeading extends StatelessWidget {
     Key? key,
     required this.title,
     this.fontSize = 20.0,
-    this.haveUnderLine = true,
+    this.haveUnderLine = false,
   }) : super(key: key);
 
   final String title;
@@ -21,7 +21,7 @@ class CommonHeading extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize,
           color: Colors.black,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w400,
           decoration:
               haveUnderLine ? TextDecoration.underline : TextDecoration.none,
         ),
