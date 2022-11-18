@@ -4,10 +4,17 @@ import 'package:online_voting_system/controller/student/student_controller.dart'
 import 'package:online_voting_system/utility/size.dart';
 import 'package:online_voting_system/widget/common_scaffold.dart';
 
-class StudentLogin extends StatelessWidget {
+class StudentLogin extends StatefulWidget {
   const StudentLogin({Key? key}) : super(key: key);
 
-  static StudentController studentController = Get.put(StudentController());
+  @override
+  State<StudentLogin> createState() => _StudentLoginState();
+}
+
+class _StudentLoginState extends State<StudentLogin> {
+  StudentController studentController = Get.put(StudentController());
+
+  bool hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +61,23 @@ class StudentLogin extends StatelessWidget {
                     const SizedBox(height: 14.0),
                     TextFormField(
                       controller: studentController.dateOfBirth,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
                         hintText: 'Date of Birth',
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              setState(() {
+                                hidePassword = !hidePassword;
+                              });
+                            },
+                            child: Icon(
+                                hidePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey)),
                       ),
+                      keyboardType: TextInputType.text,
+                      obscureText: hidePassword,
                       validator: (String? value) {
                         if (value != null) {
                           if (value.isEmpty) {
